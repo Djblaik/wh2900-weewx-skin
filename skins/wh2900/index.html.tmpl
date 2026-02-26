@@ -1,0 +1,360 @@
+#errorCatcher Echo
+## ---------------- ICON LOGIC (TRUE WH2900) ----------------
+#set $rain = $current.rainRate.raw
+#set $solar = $current.radiation.raw
+#set $uv = $current.UV.raw
+#set $temp = $current.outTemp.raw
+#set $hour = int($current.dateTime.format("%H"))
+##set $lastrain = $time_at('rain>0').format("%b %e %-I.%M%p").lower()
+#set $windArrowAngle = $current.windDir.raw
+#if not $windArrowAngle
+    #set $windArrowAngle = 0
+#end if
+#set $trenddir = "↑"
+
+## ---------------- MOON PHASE (STRING SAFE) ----------------
+
+#set $moonPhaseName = $almanac.moon_phase
+
+#set $moonIndex = 0
+#if $moonPhaseName == "New Moon"
+    #set $moonIndex = 0
+#elif $moonPhaseName == "Waxing crescent"
+    #set $moonIndex = 1
+#elif $moonPhaseName == "First quarter"
+    #set $moonIndex = 2
+#elif $moonPhaseName == "Waxing gibbous"
+    #set $moonIndex = 3
+#elif $moonPhaseName == "Full Moon"
+    #set $moonIndex = 4
+#elif $moonPhaseName == "Waning gibbous"
+    #set $moonIndex = 5
+#elif $moonPhaseName == "Last quarter"
+    #set $moonIndex = 6
+#elif $moonPhaseName == "Waning crescent"
+    #set $moonIndex = 7
+#end if
+
+#set $moonOffset = $moonIndex * 120
+
+
+#set $lastrainlength = $time_since('rain>0').raw
+
+#set $days = int($lastrainlength // 86400)
+#set $hours = int($lastrainlength % 86400) // 3600
+#set $lastrain = str($days) + "d " + str($hours) + "h ago"
+
+#set $barowithtrend = $current.barometer.formatted
+
+#set $trendRaw = $trend.barometer.raw
+#set $trendStep = 0
+
+#if $trendRaw >= 2.5
+    #set $trendStep = 5
+#elif $trendRaw >= 2
+    #set $trendStep = 4
+#elif $trendRaw >= 1.5
+    #set $trendStep = 3
+#elif $trendRaw >= 1
+    #set $trendStep = 2
+#elif $trendRaw >= 0.5
+    #set $trendStep = 1
+#elif $trendRaw <= -0.5
+    #set $trendStep = -1
+#elif $trendRaw <= -1
+    #set $trendStep = -2
+#elif $trendRaw <= -1.5
+    #set $trendStep = -3
+#elif $trendRaw <= -2
+    #set $trendStep = -4
+#elif $trendRaw <= -2.5
+    #set $trendStep = -5
+#else
+    #set $trendStep = 0
+#end if
+
+
+#set $uvlevel = "Low"
+
+#if $uv <= 2
+    #set $uvlevel = "Low"
+#elif $uv > 2 and $uv <= 5
+    #set $uvlevel = "Medium"
+#elif $uv > 5 and $uv < 8
+    #set $uvlevel = "High"
+#elif $uv >= 8 and $uv < 11
+    #set $uvlevel = "Very high"
+#elif $uv >= 11
+    #set $uvlevel = "Extreme"
+#end if
+
+#set $icon = "cloudy"
+
+## --- PRECIPITATION HAS TOP PRIORITY ---
+#if $rain > 0
+    #if $temp <= -1
+        #set $icon = "snow"
+    #elif $temp <= 1
+        #set $icon = "snow-mood"
+    #elif $rain > 50 and ($hour <= 4 or $hour < 18)
+        #set $icon = "storms-night"
+    #elif $rain > 50
+        #set $icon = "storms"
+    #elif $hour <= 4 or $hour > 18
+        #set $icon = "rain-night"
+    #else
+        #set $icon = "rain"
+    #end if
+
+## --- DAYTIME CONDITIONS ---
+#elif $hour >= 6 and $hour < 19
+    ## Fog / mist (very low solar, no rain)
+    #if $solar < 50 and $uv < 1 and $rain < 1
+        #set $icon = "fog"
+
+    ## Clear sky
+    #elif $solar > 450 and $uv >= 5
+        #set $icon = "clear"
+
+    ## Mostly sunny
+    #elif $solar > 300 and $uv >= 4
+        #set $icon = "mostly-sunny"
+
+    ## Partly cloudy
+    #elif $solar > 180
+        #set $icon = "partly-cloudy"
+
+    ## Overcast
+    #else
+        #set $icon = "cloudy"
+    #end if
+
+## --- NIGHTTIME CONDITIONS ---
+#else
+    ## Clear night
+    #if $solar < 5
+        #set $icon = "clear-night"
+
+    ## Cloudy night
+    #else
+        #set $icon = "cloudy-night"
+    #end if 
+#end if
+
+#if $hour < 9
+  #set $rainto = $since($hour=9).rain.sum
+  #set $span = $since($hour=9)
+#else
+  #set $rainto = $since($hour=9, today=False).rain.sum
+  #set $span = $since($hour=9, today=False)
+#end if
+
+#set $label_date = $span
+
+## ---------------------------------------------------------
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>$Extras.page_title</title>
+<link rel="stylesheet" href="css/wh2900.css">
+<meta http-equiv="refresh" content="$Extras.refresh">
+</head>
+<body>
+    <div class="screen">
+        <div class="console">
+            <div class="column1-grid">
+                <!-- ===== COLUMN 1 ROW 1 ===== -->
+                <div class="panel time">
+                    <div class="label uv-light-labels">Last updated:</div>
+                    <div class="clock">$current.dateTime.format("%H:%M")</div>
+                    <div class="datecol">
+                        <div class="day">$current.dateTime.format("%a")</div>
+                        <div class="date">$current.dateTime.format("%d.%m")</div>
+                    </div>
+                </div>
+
+                <!-- ===== COLUMN 1 ROW 2: MOON PHASE BAR ===== -->
+                <div class="panel moon">
+                    <div class="moon-bar">
+                        <div class="moon-strip" style="transform: translateX(-${moonOffset}px);">
+                            <img src="icons/moon/new-moon.svg" alt="New Moon">
+                            <img src="icons/moon/waxing-crescent.svg" alt="Waxing Crescent">
+                            <img src="icons/moon/waxing-quarter.svg" alt="First Quarter">
+                            <img src="icons/moon/waxing-gibbous.svg" alt="Waxing Gibbous">
+                            <img src="icons/moon/full-moon.svg" alt="Full Moon">
+                            <img src="icons/moon/waning-gibbous.svg" alt="Waning Gibbous">
+                            <img src="icons/moon/waning-quarter.svg" alt="Last Quarter">
+                            <img src="icons/moon/waning-crescent.svg" alt="Waning Crescent">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== COLUMN 1 ROW 2 ===== -->
+                <div class="panel weather">
+                    <div class="weather-left">
+                        <img src="icons/${icon}.svg" class="wxicon" alt="weather icon">
+                    </div>
+                    <div class="pressure-trend">
+                        <div class="scale">
+                            <span class="preserve-spaces"> 5</span>
+                            <span class="preserve-spaces"> 4</span>
+                            <span class="preserve-spaces"> 3</span>
+                            <span class="preserve-spaces"> 2</span>
+                            <span class="preserve-spaces"> 1</span>
+                            <span class="preserve-spaces"> 0</span>
+                            <span>-1</span>
+                            <span>-2</span>
+                            <span>-3</span>
+                            <span>-4</span>
+                            <span>-5</span>
+                        </div>
+                        <div class="marker arrow" style="--trend:${trendStep}"></div>
+                        </div>
+
+                    <div class="weather-right">
+                        <div class="pressure right">
+                            <div class="label white-label pressure-label">PRESSURE</div>
+                            <span class="pressure-value">$barowithtrend</span><span class="barounit">hpa</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== COLUMN 1 ROW 3 ===== -->
+                <div class="c1row3">
+                    <div class="panel uv">
+                        <div class="label white-label uv-light-labels">UVI</div>
+                        <div class="value">
+                            <span>$current.UV</span>
+                            <span class="unit">$uvlevel</span>
+                        </div>
+                    </div>
+
+                    <div class="panel light">
+                        <div class="label white-label uv-light-labels">LIGHT</div>
+                        <div>
+                            <span class="value">$current.radiation.formatted</span>
+                            <span class="unit">W/m²</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column2-grid">
+                <!-- ===== COLUMN 2 ROW 1 ===== -->
+                <div class="panel indoor">
+                    <div class="label orange orange-label">INDOOR</div>
+                    <div class="io-values">
+                        <span class="temp orange">$current.inTemp.formatted°c</span>
+                        <span class="hum orange">$current.inHumidity</span>
+                    </div>
+                </div>
+                <div class="row-gap"></div>
+
+                <!-- ===== COLUMN 2 ROW 2 ===== -->
+                <div class="panel outdoor">
+                    <div class="label white-label">OUTDOOR</div>
+                    <div class="io-values">
+                        <span class="temp white">$current.outTemp.formatted°c</span>
+                        <span class="hum white">$current.outHumidity</span>
+                    </div>
+                    <div class="feels-like white">Feels like: $current.appTemp.formatted°c</div>
+                </div>
+
+                <!-- ===== COLUMN 2 ROW 3 ===== -->
+                <div class="c2row3">
+                    <div class="panel wind">
+                        <div class="label green-label wind-label">WIND</div>
+                    <!--    <div class="speed green">$current.windSpeed.formatted km/h</div>
+                        <div class="gust green">Gust $current.windGust.formatted km/h</div>
+                    -->
+                        #raw
+                        <svg class="dial" viewBox="0 0 200 200">
+                            <!-- Outer ring -->
+                            <circle cx="100" cy="100" r="90"
+                                    fill="none"
+                                    stroke="#3a3a3a"
+                                    stroke-width="6"/>
+
+                            <!-- Inner ring -->
+                            <circle cx="100" cy="100" r="65"
+                                    fill="none"
+                                    stroke="#2a2a2a"
+                                    stroke-width="2"/>
+
+                            <!-- Cardinal labels -->
+                            <g fill="#777" font-size="12"
+                                text-anchor="middle"
+                                dominant-baseline="middle">
+                                <text x="100" y="16">N</text>
+                                <text x="184" y="100">E</text>
+                                <text x="100" y="188">S</text>
+                                <text x="16" y="100">W</text>
+                            </g>
+
+                            <!-- Direction marker (wind FROM) -->
+                        #end raw
+                            <g transform="rotate($windArrowAngle 100 100)">
+                                <g transform="rotate(180 100 16.67)">
+                                    <polygon points="100,6 92,22 108,22" fill="#9cff00"/>
+                                </g>
+                            </g>
+                        #raw
+                            <!-- Center value -->
+                            <g fill="#9cff00"
+                                font-family="monospace"
+                                text-anchor="middle">
+                        #end raw       
+                                <text x="100" y="105" font-size="35">$current.windSpeed.formatted km/h</text>
+                                <text x="100" y="130" font-size="17">Gust $current.windGust.formatted km/h</text>
+                        #raw        
+                            </g>
+                        </svg>
+                        #end raw
+                    </div>    
+
+                    <div class="panel rain">
+                        <div class="label blue-label">RAIN</div>
+                        <div class="raindata">
+                            <div class="blue rainline"><span>Rain Rate: </span></div>
+                            <div class="blue rainline"><span>$current.rainRate.formatted mm/hr</span></div>
+                            <div class="blue rainline"><span>Since 12 am: </span></div>
+                            <div class="blue rainline"><span>$day.rain.sum</span></div>
+                            <div class="blue rainline"><span>Since 9 am: </span></div>
+                            <div class="blue rainline"><span>$since($hour=9).rain.sum</span></div>
+                            <div class="blue rainline"><span>To 9 am $label_date :</span></div>
+                            <div class="blue rainline"><span>$rainto</span></div>
+                            <div class="blue rainline"><span>Last rain: </span></div>
+                            <div class="blue rainline"><span>$lastrain</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+function resizeScreen() {
+    const scale = Math.min(
+        window.innerWidth / 1920,
+        window.innerHeight / 1080
+    );
+
+    const scaledWidth  = 1920 * scale;
+    const scaledHeight = 1080 * scale;
+
+    const offsetX = (window.innerWidth  - scaledWidth)  / 2;
+    const offsetY = (window.innerHeight - scaledHeight) / 2;
+
+    const screen = document.querySelector('.screen');
+    screen.style.transform =
+        `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+}
+
+window.addEventListener('resize', resizeScreen);
+resizeScreen();
+
+</script>
+</html> 
+
+

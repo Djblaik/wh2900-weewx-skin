@@ -1,0 +1,455 @@
+/* =========================
+   GLOBAL / BODY
+   ========================= */
+:root {
+    --scale: 1;
+    --font-base: calc(1vw * var(--scale));
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+}
+
+body {
+    color: #fff;
+    font-family: "DSEG7 Classic", "Digital-7", Arial, sans-serif;
+}
+
+.screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    transform-origin: top left;
+    transform: scale(var(--ui-scale));
+}
+
+/* =========================
+   MAIN CONSOLE GRID
+   ========================= */
+.console {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    height: 100%;
+    gap: 15px;
+}
+
+.column1-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 0.4fr 2fr 1fr;  /* Added 80px height for moon bar */
+    grid-template-areas:
+        "time"
+        "moon"
+        "weather"
+        "c1row3";
+    height: 100%;
+    gap: 1px;
+    min-height: 0;
+    border-right: 2px solid #ffffff;
+}
+
+.column2-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 3fr 15px 3fr 4fr;
+    grid-template-areas:
+        "indoor"
+        "gap"
+        "outdoor"
+        "c2row3";
+    gap: 0;
+}
+
+.time, .weather, .c1row3,
+.indoor, .outdoor, .c2row3 {
+    height: 100%;
+    min-height: 0;
+}
+
+/* =========================
+   GRID AREA ASSIGNMENTS
+   ========================= */
+.time     { grid-area: time; }
+.weather  { grid-area: weather; }
+.indoor   { grid-area: indoor; }
+.outdoor  { grid-area: outdoor; }
+.c1row3   { grid-area: c1row3; }
+.c2row3   { grid-area: c2row3; }
+
+/* =========================
+   PANEL BASE STYLE
+   ========================= */
+.panel {
+    position: relative;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    padding-top: 60px;
+}
+
+/* =========================
+   COLUMN 1 PANELS
+   ========================= */
+.time {
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(124, 255, 0, 0.15);
+    border: none;
+    border-bottom: 2px solid #ffffff;
+}
+
+.weather {
+    display: grid;
+    grid-template-columns: 4fr 0.5fr 4fr;
+    height: 100%;
+    gap: 1px; /* same divider look as rest of UI */
+    padding: 1px;
+}
+
+.weather-left,
+.weather-right {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    justify-content: center;
+}
+
+/* Optional visual distinction */
+.weather-left {
+    justify-content: center;
+}
+
+.weather-right {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+
+.c1row3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+/* =========================
+   COLUMN 2 PANELS
+   ========================= */
+.indoor {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    padding-top: 0;
+    background-color: rgba(255, 123, 0, 0.15);
+    border: 2px solid #ffffff;
+}
+
+.outdoor {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 0;
+    justify-content: flex-end;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 2px solid #ececec;
+}
+
+.c2row3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    
+}
+
+/* =========================
+   TEXT STYLING (Responsive)
+   ========================= */
+.clock {
+    font-size: 190px;
+    color: #7cff00;
+}
+
+.datecol {
+    text-align: right;
+}
+
+.day  { font-size: 75px; }
+.date { font-size: 100px; }
+
+.temp { font-size: 200px; }
+.hum  { 
+    font-size: 150px;
+    padding-top: 60px;
+}
+
+.value,
+.rate {
+    font-size: 150px;
+}
+
+.pressure-value {
+    font-size: 105px;
+}
+
+.unit {
+    font-size: 39px;
+}
+
+.speed {
+    position: absolute;
+    left: 10px;
+    top: 20px;
+    font-size: 29px;
+}
+
+.gust {
+    position: absolute;
+    left: 10px;
+    top: 48px;
+    font-size: 29px;
+}
+
+svg {
+    max-height: 100%;
+}
+
+.label {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    font-size: 58px;
+    opacity: 0.75;
+    pointer-events: none;
+    padding-left: 10px;
+    padding-right:10px;
+}
+.pressure-label {
+    top: 0px;
+    right: 0px;
+}
+
+.wind-label {
+    left: 5px;
+    right: auto;
+}
+
+.trend {
+    font-size: 77px;
+    color: #ffcc66;
+}
+
+/* =========================
+   ICONS (Responsive)
+   ========================= */
+.wxicon {
+    width: 384px;
+    height: auto;
+}
+
+.compass {
+    width: 115px;
+    height: auto;
+    stroke: #7cff00;
+    fill: none;
+    stroke-width: 4px;
+    margin: auto;
+}
+
+/* =========================
+   COLOR UTILITIES
+   ========================= */
+.orange { color: #ff7b00; }
+.white  { color: #ffffff; }
+.green  { color: #7cff00; }
+.blue   { color: #39b9ff; }
+
+.orange-label { background-color: #ff7b00; color:#000000; }
+.white-label  { background-color: #ffffff; color:#000000; }
+.green-label  { background-color: #7cff00; color:#000000; }
+.blue-label   { background-color: #39b9ff; color:#000000; }
+
+/* =========================
+   INDOOR / OUTDOOR WRAPPERS
+   ========================= */
+.io-values {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.feels-like {
+    font-size: 50px; /* adjust */
+}
+
+/* =========================
+   SPECIFIC PANELS
+   ========================= */
+.rain {
+    flex-direction: column;
+    justify-content: center;
+    background-color: rgba(57, 185, 255, 0.15);
+}
+
+.pressure.right {
+    margin-left: 0px;
+    text-align: right;
+}
+
+.wind {
+    flex-direction: column;
+    max-height: 100%;
+    background-color: rgba(124, 255, 0, 0.15);
+    border-right: 2px solid #ffffff;
+}
+
+.dial {
+    width: 365px;
+    height: 100%;
+    max-height: 100%;
+    display: block;
+}
+
+.raindata {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    column-gap: 39px;
+    row-gap: 10px;
+    justify-content: center;
+}
+
+.raindata span {
+    white-space: nowrap;
+    text-align: left;
+}
+
+.rainline {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 34px;
+}
+
+.uv-light-labels {
+    left: 10px;
+    right: auto;
+}
+
+.uv,
+.light {
+    display: flex;
+    align-items: center;      /* vertical center */
+    justify-content: center;  /* horizontal center */
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-top: 2px solid #ffffff;
+}
+
+.uv {
+    border-right: 2px solid #ffffff;
+}
+
+.row-gap {
+    background: transparent;
+}
+
+/* =========================
+   MOON PHASE BAR
+   ========================= */
+
+.moon-bar {
+    width: 120px;
+    height: 80px;
+    overflow: hidden;
+    background: #000;
+    position: relative;   /* anchor */
+}
+
+.moon-strip {
+    position: absolute;   /* 🚨 THIS */
+    top: 0;
+    left: 0;
+    display: flex;
+    height: 100%;
+}
+
+.moon-strip img {
+    width: 120px;
+    height: 100%;
+    flex-shrink: 0;
+    display: block;
+}
+
+
+.moon {
+    grid-area: moon;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0;
+    border-left: 2px solid rgba(255, 255, 255, 0.4);
+    border-right: 2px solid rgba(255, 255, 255, 0.4);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.pressure-trend {
+    position: relative;
+    width: inherit;
+    height: inherit;
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.scale {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 30px;
+    opacity: 0.9;
+    padding: 10px 0;
+}
+
+/* Arrow marker */
+.marker.arrow {
+    position: absolute;
+    left: 0;
+
+    /* Size of arrow */
+    --arrow-h: 20px;
+
+    /* Align arrow center with label center */
+    top: calc(
+        (
+            (5 - var(--trend)) + 0.5
+        ) * (100% / 11)
+        - (var(--arrow-h) / 2)
+    );
+
+    width: 0;
+    height: 0;
+
+    border-top: calc(var(--arrow-h) / 2) solid transparent;
+    border-bottom: calc(var(--arrow-h) / 2) solid transparent;
+    border-left: 20px solid #ffffff;
+}
+
+.barounit {
+    font-size: 50px;
+}
+
+.preserve-spaces {
+  white-space: pre;
+}
