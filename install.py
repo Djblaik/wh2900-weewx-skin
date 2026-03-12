@@ -27,16 +27,13 @@ class WH2900Installer(ExtensionInstaller):
                 ('skins/wh2900', [
                     'skins/wh2900/index.html.tmpl',
                     'skins/wh2900/skin.conf'
+                    'skins/wh2900/manifest.json'
+                    'skins/wh2900/sw.js'
                 ]),
 
                 # Skin CSS
                 ('skins/wh2900/css', [
                     'skins/wh2900/css/wh2900.css'
-                ]),
-
-                # Skin JS
-                ('skins/wh2900/js', [
-                    'skins/wh2900/js/kiosk.js'
                 ]),
 
                 # Weather icons
@@ -56,6 +53,28 @@ class WH2900Installer(ExtensionInstaller):
                     'skins/wh2900/icons/snow-mood.svg',
                     'skins/wh2900/icons/storms.svg',
                     'skins/wh2900/icons/storms-night.svg'
+                ]),
+                
+                # fonts
+                ('skins/wh2900/fonts/DSEG&-Modern', [
+                    'DSEG7Modern-Bold.ttf'
+                    'DSEG7Modern-Bold.woff'
+                    'DSEG7Modern-Bold.woff2'
+                    'DSEG7Modern-BoldItalic.ttf'
+                    'DSEG7Modern-BoldItalic.woff'
+                    'DSEG7Modern-BoldItalic.woff2'
+                    'DSEG7Modern-Italic.ttf'
+                    'DSEG7Modern-Italic.woff'
+                    'DSEG7Modern-Italic.woff2'
+                    'DSEG7Modern-Light.ttf'
+                    'DSEG7Modern-Light.woff'
+                    'DSEG7Modern-Light.woff2'
+                    'DSEG7Modern-LightItalic.ttf'
+                    'DSEG7Modern-LightItalic.woff'
+                    'DSEG7Modern-LightItalic.woff2'
+                    'DSEG7Modern-Regular.ttf'
+                    'DSEG7Modern-Regular.woff'
+                    'DSEG7Modern-Regular.woff2'                
                 ]),
 
                 # Moon phase icons

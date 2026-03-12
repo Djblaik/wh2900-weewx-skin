@@ -1,272 +1,12 @@
 /* =========================
-   GLOBAL / BODY
+   ROOT / GLOBAL SCALE
    ========================= */
-:root {
-    --scale: 1;
-    --font-base: calc(1vw * var(--scale));
-}
 
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    overflow: hidden;
-}
+:root{
 
-body {
-    color: #fff;
-    font-family: "DSEG7 Classic", "Digital-7", Arial, sans-serif;
-}
+--gap:1rem;
+--pad:0.8rem;
 
-.screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 1920px;
-    height: 1080px;
-    transform-origin: top left;
-    transform: scale(var(--ui-scale));
-}
-
-/* =========================
-   MAIN CONSOLE GRID
-   ========================= */
-.console {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr;
-    height: 100%;
-    gap: 15px;
-}
-
-.column1-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 0.4fr 2fr 1fr;  /* Added 80px height for moon bar */
-    grid-template-areas:
-        "time"
-        "moon"
-        "weather"
-        "c1row3";
-    height: 100%;
-    gap: 1px;
-    min-height: 0;
-    border-right: 2px solid #ffffff;
-}
-
-.column2-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 3fr 15px 3fr 4fr;
-    grid-template-areas:
-        "indoor"
-        "gap"
-        "outdoor"
-        "c2row3";
-    gap: 0;
-}
-
-.time, .weather, .c1row3,
-.indoor, .outdoor, .c2row3 {
-    height: 100%;
-    min-height: 0;
-}
-
-/* =========================
-   GRID AREA ASSIGNMENTS
-   ========================= */
-.time     { grid-area: time; }
-.weather  { grid-area: weather; }
-.indoor   { grid-area: indoor; }
-.outdoor  { grid-area: outdoor; }
-.c1row3   { grid-area: c1row3; }
-.c2row3   { grid-area: c2row3; }
-
-/* =========================
-   PANEL BASE STYLE
-   ========================= */
-.panel {
-    position: relative;
-    padding: 10px;
-    box-sizing: border-box;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    padding-top: 60px;
-}
-
-/* =========================
-   COLUMN 1 PANELS
-   ========================= */
-.time {
-    justify-content: space-between;
-    align-items: center;
-    background-color: rgba(124, 255, 0, 0.15);
-    border: none;
-    border-bottom: 2px solid #ffffff;
-}
-
-.weather {
-    display: grid;
-    grid-template-columns: 4fr 0.5fr 4fr;
-    height: 100%;
-    gap: 1px; /* same divider look as rest of UI */
-    padding: 1px;
-}
-
-.weather-left,
-.weather-right {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    box-sizing: border-box;
-    padding: 10px;
-    justify-content: center;
-}
-
-/* Optional visual distinction */
-.weather-left {
-    justify-content: center;
-}
-
-.weather-right {
-    background-color: rgba(255, 255, 255, 0.15);
-}
-
-
-.c1row3 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
-
-/* =========================
-   COLUMN 2 PANELS
-   ========================= */
-.indoor {
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    padding-top: 0;
-    background-color: rgba(255, 123, 0, 0.15);
-    border: 2px solid #ffffff;
-}
-
-.outdoor {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding-top: 0;
-    justify-content: flex-end;
-    background-color: rgba(255, 255, 255, 0.15);
-    border: 2px solid #ececec;
-}
-
-.c2row3 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    
-}
-
-/* =========================
-   TEXT STYLING (Responsive)
-   ========================= */
-.clock {
-    font-size: 190px;
-    color: #7cff00;
-}
-
-.datecol {
-    text-align: right;
-}
-
-.day  { font-size: 75px; }
-.date { font-size: 100px; }
-
-.temp { font-size: 200px; }
-.hum  { 
-    font-size: 150px;
-    padding-top: 60px;
-}
-
-.value,
-.rate {
-    font-size: 150px;
-}
-
-.pressure-value {
-    font-size: 105px;
-}
-
-.unit {
-    font-size: 39px;
-}
-
-.speed {
-    position: absolute;
-    left: 10px;
-    top: 20px;
-    font-size: 29px;
-}
-
-.gust {
-    position: absolute;
-    left: 10px;
-    top: 48px;
-    font-size: 29px;
-}
-
-svg {
-    max-height: 100%;
-}
-
-.label {
-    position: absolute;
-    top: 5px;
-    right: 15px;
-    font-size: 58px;
-    opacity: 0.75;
-    pointer-events: none;
-    padding-left: 10px;
-    padding-right:10px;
-}
-.pressure-label {
-    top: 0px;
-    right: 0px;
-}
-
-.wind-label {
-    left: 5px;
-    right: auto;
-}
-
-.trend {
-    font-size: 77px;
-    color: #ffcc66;
-}
-
-/* =========================
-   ICONS (Responsive)
-   ========================= */
-.wxicon {
-    width: 384px;
-    height: auto;
-}
-
-.compass {
-    width: 115px;
-    height: auto;
-    stroke: #7cff00;
-    fill: none;
-    stroke-width: 4px;
-    margin: auto;
-}
-
-/* =========================
-   COLOR UTILITIES
-   ========================= */
 .orange { color: #ff7b00; }
 .white  { color: #ffffff; }
 .green  { color: #7cff00; }
@@ -277,179 +17,500 @@ svg {
 .green-label  { background-color: #7cff00; color:#000000; }
 .blue-label   { background-color: #39b9ff; color:#000000; }
 
-/* =========================
-   INDOOR / OUTDOOR WRAPPERS
-   ========================= */
-.io-values {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-}
-
-.feels-like {
-    font-size: 50px; /* adjust */
 }
 
 /* =========================
-   SPECIFIC PANELS
+   BODY
    ========================= */
-.rain {
-    flex-direction: column;
-    justify-content: center;
-    background-color: rgba(57, 185, 255, 0.15);
-}
 
-.pressure.right {
-    margin-left: 0px;
-    text-align: right;
-}
-
-.wind {
-    flex-direction: column;
-    max-height: 100%;
-    background-color: rgba(124, 255, 0, 0.15);
-    border-right: 2px solid #ffffff;
-}
-
-.dial {
-    width: 365px;
-    height: 100%;
-    max-height: 100%;
-    display: block;
-}
-
-.raindata {
-    display: grid;
-    grid-template-columns: max-content max-content;
-    column-gap: 39px;
-    row-gap: 10px;
-    justify-content: center;
-}
-
-.raindata span {
-    white-space: nowrap;
-    text-align: left;
-}
-
-.rainline {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    font-size: 34px;
-}
-
-.uv-light-labels {
-    left: 10px;
-    right: auto;
-}
-
-.uv,
-.light {
-    display: flex;
-    align-items: center;      /* vertical center */
-    justify-content: center;  /* horizontal center */
-    text-align: center;
-    background-color: rgba(255, 255, 255, 0.15);
-    border: none;
-    border-top: 2px solid #ffffff;
-}
-
-.uv {
-    border-right: 2px solid #ffffff;
-}
-
-.row-gap {
-    background: transparent;
+html,body{
+margin:0;
+padding:0;
+width:100%;
+min-height:100%;
+background:#000;
+color:#fff;
+font-family: 'Roboto', sans-serif, monospace;
+overflow-x:hidden;
+overflow-y:auto;   /* mobile scroll */
 }
 
 /* =========================
-   MOON PHASE BAR
+   SCREEN WRAPPER
    ========================= */
 
-.moon-bar {
-    width: 120px;
-    height: 80px;
-    overflow: hidden;
-    background: #000;
-    position: relative;   /* anchor */
+.screen{
+width:100%;
+height:100vh;           /* lock to viewport */
+padding:10px;
+box-sizing:border-box;
 }
 
-.moon-strip {
-    position: absolute;   /* 🚨 THIS */
-    top: 0;
-    left: 0;
-    display: flex;
-    height: 100%;
+/* =========================
+   MOBILE LAYOUT (DEFAULT)
+   ========================= */
+
+.console{
+display:flex;
+flex-direction:column;
 }
 
-.moon-strip img {
-    width: 120px;
-    height: 100%;
-    flex-shrink: 0;
-    display: block;
+.column1-grid,
+.column2-grid{
+display:flex;
+flex-direction:column;
+
+border:none;
 }
 
+.c1row3,
+.c2row3{
+display:flex;
+flex-direction:column;
 
-.moon {
-    grid-area: moon;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 5px 0;
-    border-left: 2px solid rgba(255, 255, 255, 0.4);
-    border-right: 2px solid rgba(255, 255, 255, 0.4);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.weather {
+  display: flex;
+  flex-direction: row;      /* horizontal */
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;             /* spacing between sections */
+  width: 100%;
+  flex-wrap: nowrap;        /* prevent wrapping */
+}
+
+.weather-right {
+    justify-items: center;
+}
+
+.weather-left,
+.weather-right,
+.pressure-trend {
+  flex: 1 1 auto;           /* flexible width */
+  min-width: 0;             /* prevent overflow */
 }
 
 .pressure-trend {
-    position: relative;
-    width: inherit;
-    height: inherit;
-    color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.15);
+  display: flex;
+  justify-content: center;  /* center the arrow vertically */
+  align-items: center;
+  position:relative;
+  background:var(--panel-dark);
+  height: clamp(60px, 42vw, 190px);
 }
 
-.scale {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
+/* =========================
+   PANEL BASE
+   ========================= */
+
+.panel{
+position:relative;
+padding:var(--pad);
+display:flex;
+align-items:center;
+box-sizing:border-box;
+min-height:0;
+overflow:hidden;
+flex:1; 
+}
+
+/* =========================
+   PANEL COLORS
+   ========================= */
+
+.time{
+background:rgba(124, 255, 0, 0.15);
+color: rgba(124, 255, 0);
+justify-content: space-between;
+align-items: end;
+}
+
+.indoor{
+background:rgba(255,123,0,0.15);
+border:2px solid #fff;
+flex-direction:column;
+justify-content:flex-end;
+border-radius: 15px;
+}
+
+.outdoor{
+background-color: rgba(255, 255, 255, 0.15);
+border:2px solid #ececec;
+flex-direction:column;
+justify-content:flex-end;
+border-radius: 15px;
+}
+
+.wind{
+background:rgba(124, 255, 0, 0.15);
+flex-direction:column;
+}
+
+.rain{
+background:rgba(57, 185, 255, 0.15);
+flex-direction:column;
+justify-content:center;
+}
+
+.uv,
+.light{
+background:rgba(255, 255, 255, 0.15);
+justify-content:center;
+text-align:center;
+}
+
+/* =========================
+   TYPOGRAPHY (FLUID)
+   ========================= */
+
+.clock{
+font-size:clamp(60px, 8vw, 230px);
+color:var(--green);
+margin-top: 2vw;
+}
+
+.day{
+font-size:clamp(22px,3vw,75px);
+}
+
+.date{
+font-size:clamp(30px, 6vw, 120px);
+}
+
+.temp{
+font-size:clamp(70px,8vw,200px);
+}
+
+.hum{
+font-size:clamp(50px,6vw,150px);
+}
+
+.value,
+.rate,
+.pressure-value{
+font-size:clamp(45px,5vw,105px);
+}
+.unit{
+font-size:clamp(14px,2vw,39px);
+}
+
+.label{
+position:absolute;
+top:1px;
+right:1px;
+font-size:clamp(16px,2.5vw,58px);
+opacity:.75;
+padding-left: var(--pad);
+padding-right: var(--pad);
+}
+
+.wind-label{
+left:5px;
+right:auto;
+}
+
+.uv-light-labels{
+left:1px;
+right:auto;
+}
+
+/* =========================
+   ICONS
+   ========================= */
+
+.wxicon{
+width:100%;
+height:100%;
+}
+
+.dial{
+width:clamp(160px,16vw,365px);
+max-width:100%;
+height:auto;
+}
+
+/* =========================
+   MOON BAR
+   ========================= */
+
+.moon{
+display:flex;
+justify-content:center;
+align-items:center;
+padding:5px 0;
+border:2px solid rgba(255,255,255,0.4);
+}
+
+.moon-bar {
+  width: clamp(60px, 40vw, 120px);
+  height: clamp(40px, 8vw, 40px);
+  overflow: hidden;
+  position: relative;
+}
+
+.moon-strip {
+  display: flex;
+  height: 100%;
+  transition: transform 0.3s ease;
+  /* slide the strip left according to index */
+  transform: translateX(calc(var(--moon-index) * -100%)); /* 12.5% = 100% / 8 */
+}
+
+.moon-strip img {
+  flex-shrink: 0;
+  height: 100%;
+  width: auto;
+  display: block;
+}
+
+/*
+.moon-bar{
+width:clamp(60px,12vw,120px);
+height:clamp(40px,8vw,40px);
+overflow:hidden;
+position:relative;
+}
+
+.moon-strip{
+position:absolute;
+display:flex;
+}
+
+.moon-strip img{
+width:100%;
+flex-shrink:0;
+}
+*/
+
+/* =========================
+   INDOOR / OUTDOOR VALUES
+   ========================= */
+
+.io-values{
+display:flex;
+justify-content:space-between;
+width:100%;
+align-items: center;
+}
+
+.feels-like{
+font-size:clamp(20px,3vw,50px);
+}
+
+/* =========================
+   RAIN PANEL
+   ========================= */
+
+.raindata{
+display:grid;
+grid-template-columns:2fr 1fr;
+justify-content:center;
+width:85%;
+}
+
+.rainline{
+font-size:clamp(10px,1.3vw,35px);
+white-space:nowrap;
+}
+
+.scale{
+position:absolute;
+right:0;
+top:0;
+bottom:0;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+font-size:clamp(12px,1.2vw,30px);
+padding:0;
+min-width: 30px;
+height: 100%;
+align-items: flex-end;
+padding-right: 15px;
+}
+
+.marker.arrow{
+
+--arrow-h:clamp(8px,2.5vw,20px);
+
+
+position:absolute;
+right:0;
+
+top:calc(((5 - var(--trend)) + .5) * (100% / 11) - (var(--arrow-h)/2));
+
+border-top:calc(var(--arrow-h)/2) solid transparent;
+border-bottom:calc(var(--arrow-h)/2) solid transparent;
+border-left:none;
+border-right:clamp(8px,2.5vw,20px) solid #fff;
+
+}
+
+/* =========================
+   DESKTOP LAYOUT
+   ========================= */
+
+@media (min-width:900px){
+
+    html,body{
+        overflow:hidden;   /* lock desktop */
+        }
+    .screen{
+        padding: 6px;
+        overflow: hidden;
+    }
+
+.console{
+display:grid;
+grid-template-columns:1fr 1fr;
+height:100%;
+}
+
+.column1-grid{
+display:grid;
+grid-template-rows:minmax(0,1fr) minmax(0,.3fr) minmax(0,1.5fr) minmax(0,1fr);
+
+}
+
+.column2-grid{
+display:grid;
+grid-template-rows:minmax(0,3fr) minmax(0,3fr) minmax(0,4fr);
+}
+
+.c1row3{
+display:grid;
+grid-template-columns:1fr 1fr;
+}
+
+.c2row3{
+display:grid;
+grid-template-columns:1fr 1fr;
+}
+
+.panel{
+flex-direction: row;
+}
+
+.weather{
+grid-template-columns:4fr .5fr 4fr;
+justify-items: center;
+align-content: center;
+}
+
+.weather-left {
+    width: 100%;
+    height: 100%;
+}
+
+.weather-right {
+    width: 100%;
+    height: 100%;
+    align-content: center;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    font-size: 30px;
-    opacity: 0.9;
-    padding: 10px 0;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
-/* Arrow marker */
-.marker.arrow {
-    position: absolute;
-    left: 0;
-
-    /* Size of arrow */
-    --arrow-h: 20px;
-
-    /* Align arrow center with label center */
-    top: calc(
-        (
-            (5 - var(--trend)) + 0.5
-        ) * (100% / 11)
-        - (var(--arrow-h) / 2)
-    );
-
-    width: 0;
-    height: 0;
-
-    border-top: calc(var(--arrow-h) / 2) solid transparent;
-    border-bottom: calc(var(--arrow-h) / 2) solid transparent;
-    border-left: 20px solid #ffffff;
+.weather-left {
+    width: 100%;
+    height: 100%;
+    align-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
-.barounit {
-    font-size: 50px;
+.wind{
+border-right:2px solid #fff;
+justify-content: center;
+align-items: flex-end;
 }
 
+.uv{
+border-right:2px solid #fff;
+}
+
+.uv, .light {
+    padding-top: 4rem;
+}
 .preserve-spaces {
   white-space: pre;
+}
+
+.clock {
+    margin-top: 0;
+    padding-left: 5rem;
+}
+
+.console,
+.column1-grid,
+.column2-grid,
+.c1row3,
+.c2row3,
+.panel{
+min-height:0;
+}
+
+.weather,
+.indoor,
+.outdoor,
+.wind {
+min-height:0;
+}
+
+.indoor,
+.outdoor,
+.rain {
+align-items: flex-end;
+}
+
+.rain {
+    align-items: flex-end;
+    padding-bottom: 3rem;
+    min-height:0;
+}
+
+
+.scale {
+justify-content: space-between;
+min-width: 50px;
+padding-right: 35px;
+}
+
+.indoor, .outdoor {
+    margin: var(--pad);
+    padding-left: 5rem;
+    padding-right: 5rem;
+    margin-top: 0;
+    margin-right: 0;
+}
+
+.outdoor {
+    margin-bottom: 0;
+}
+
+.wind {
+    display: flex;
+    justify-content: center;
+}
+
+.datecol {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    height: 100%;
+    justify-content: flex-end;
+}
+
+.pressure-trend {
+  display: flex;
+  justify-content: center;  /* center the arrow vertically */
+  align-items: center;
+  position:relative;
+  background:var(--panel-dark);
+  height: 100%;
+  min-width: 85px;
+}
+
 }

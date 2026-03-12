@@ -151,17 +151,27 @@
 
 #set $label_date = $span
 
+#set $nightClass = ""
+#if $hour >= 20 or $hour < 6
+    #set $nightClass = "night"
+#end if
+
 ## ---------------------------------------------------------
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>$Extras.page_title</title>
+<meta name="theme-color" content="#000000">
 <link rel="stylesheet" href="css/wh2900.css">
+<link rel="manifest" href="manifest.json">
 <meta http-equiv="refresh" content="$Extras.refresh">
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="$nightClass">
+<div class="viewport">
     <div class="screen">
         <div class="console">
             <div class="column1-grid">
@@ -170,7 +180,7 @@
                     <div class="label uv-light-labels">Last updated:</div>
                     <div class="clock">$current.dateTime.format("%H:%M")</div>
                     <div class="datecol">
-                        <div class="day">$current.dateTime.format("%a")</div>
+                        <div class="day">D-M</div>
                         <div class="date">$current.dateTime.format("%d.%m")</div>
                     </div>
                 </div>
@@ -178,7 +188,7 @@
                 <!-- ===== COLUMN 1 ROW 2: MOON PHASE BAR ===== -->
                 <div class="panel moon">
                     <div class="moon-bar">
-                        <div class="moon-strip" style="transform: translateX(-${moonOffset}px);">
+                        <div class="moon-strip" style="--moon-index: ${moonIndex};">
                             <img src="icons/moon/new-moon.svg" alt="New Moon">
                             <img src="icons/moon/waxing-crescent.svg" alt="Waxing Crescent">
                             <img src="icons/moon/waxing-quarter.svg" alt="First Quarter">
@@ -198,7 +208,7 @@
                     </div>
                     <div class="pressure-trend">
                         <div class="scale">
-                            <span class="preserve-spaces"> 5</span>
+                            <span class="preserve-spaces"> ≥5</span>
                             <span class="preserve-spaces"> 4</span>
                             <span class="preserve-spaces"> 3</span>
                             <span class="preserve-spaces"> 2</span>
@@ -208,7 +218,7 @@
                             <span>-2</span>
                             <span>-3</span>
                             <span>-4</span>
-                            <span>-5</span>
+                            <span>≤5</span>
                         </div>
                         <div class="marker arrow" style="--trend:${trendStep}"></div>
                         </div>
@@ -216,7 +226,7 @@
                     <div class="weather-right">
                         <div class="pressure right">
                             <div class="label white-label pressure-label">PRESSURE</div>
-                            <span class="pressure-value">$barowithtrend</span><span class="barounit">hpa</span>
+                            <span class="pressure-value">$barowithtrend</span><span class="unit">hpa</span>
                         </div>
                     </div>
                 </div>
@@ -225,8 +235,8 @@
                 <div class="c1row3">
                     <div class="panel uv">
                         <div class="label white-label uv-light-labels">UVI</div>
-                        <div class="value">
-                            <span>$current.UV</span>
+                        <div>
+                            <span class="value">$current.UV</span>
                             <span class="unit">$uvlevel</span>
                         </div>
                     </div>
@@ -243,13 +253,12 @@
             <div class="column2-grid">
                 <!-- ===== COLUMN 2 ROW 1 ===== -->
                 <div class="panel indoor">
-                    <div class="label orange orange-label">INDOOR</div>
+                    <div class="label orange-label">INDOOR</div>
                     <div class="io-values">
                         <span class="temp orange">$current.inTemp.formatted°c</span>
                         <span class="hum orange">$current.inHumidity</span>
                     </div>
                 </div>
-                <div class="row-gap"></div>
 
                 <!-- ===== COLUMN 2 ROW 2 ===== -->
                 <div class="panel outdoor">
@@ -258,7 +267,7 @@
                         <span class="temp white">$current.outTemp.formatted°c</span>
                         <span class="hum white">$current.outHumidity</span>
                     </div>
-                    <div class="feels-like white">Feels like: $current.appTemp.formatted°c</div>
+                    ##<div class="feels-like white">Feels like: $current.appTemp.formatted°c</div>
                 </div>
 
                 <!-- ===== COLUMN 2 ROW 3 ===== -->
@@ -318,9 +327,9 @@
                         <div class="raindata">
                             <div class="blue rainline"><span>Rain Rate: </span></div>
                             <div class="blue rainline"><span>$current.rainRate.formatted mm/hr</span></div>
-                            <div class="blue rainline"><span>Since 12 am: </span></div>
+                            <div class="blue rainline"><span>From 12 am: </span></div>
                             <div class="blue rainline"><span>$day.rain.sum</span></div>
-                            <div class="blue rainline"><span>Since 9 am: </span></div>
+                            <div class="blue rainline"><span>From 9 am: </span></div>
                             <div class="blue rainline"><span>$since($hour=9).rain.sum</span></div>
                             <div class="blue rainline"><span>To 9 am $label_date :</span></div>
                             <div class="blue rainline"><span>$rainto</span></div>
@@ -332,29 +341,11 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 <script>
-function resizeScreen() {
-    const scale = Math.min(
-        window.innerWidth / 1920,
-        window.innerHeight / 1080
-    );
-
-    const scaledWidth  = 1920 * scale;
-    const scaledHeight = 1080 * scale;
-
-    const offsetX = (window.innerWidth  - scaledWidth)  / 2;
-    const offsetY = (window.innerHeight - scaledHeight) / 2;
-
-    const screen = document.querySelector('.screen');
-    screen.style.transform =
-        `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-}
-
-window.addEventListener('resize', resizeScreen);
-resizeScreen();
-
+    if("serviceWorker" in navigator){
+    navigator.serviceWorker.register("sw.js");
+    }
 </script>
 </html> 
-
-
